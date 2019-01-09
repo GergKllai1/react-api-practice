@@ -6,46 +6,55 @@ class Character extends Component {
         super();
         this.state = {
             trigger: 1,
-            new : '',
-            characters : []
+            character : []
         }
     }
 
-    getCharacter(char) {
-        axios.get('https://swapi.co/api/people/' + char)
-        .then(response => {
-            this.setState({
-                characters: response.data
-            })
-        })
-    }
-    componentDidMount() {
-        this.getCharacter(1)
+    updateCharacter(character) {
+        this.setState({character: character})
     }
 
-    increaseTrigger() {
-        this.new = this.state.trigger + 1
-        this.setState({trigger: this.new})
-        this.getCharacter(this.new)
+    updateTrigger(trigger) {
+        this.setState({trigger: trigger})
     }
 
-    decreaseTrigger() {
-        this.new = this.state.trigger -1
-        this.setState({trigger: this.new}) 
-        this.getCharacter(this.new)
+    async getCharacter(char) {
+        const response = await axios.get('https://swapi.co/api/people/' + char);
+        return response.data;
+    }
+
+    async componentDidMount() {
+        const character = await this.getCharacter(1)
+        this.updateCharacter(character)
+    }
+
+    async getAndUpdateData(newTrigger) {
+        const newCharacter = await this.getCharacter(newTrigger)
+        this.updateCharacter(newCharacter)
+        this.updateTrigger(newTrigger)
+    }
+
+    nextCharacter() {
+        const newTrigger = this.state.trigger + 1
+        this.getAndUpdateData(newTrigger)
+    }
+
+    previousCharacter() {
+        const newTrigger = this.state.trigger - 1
+        this.getAndUpdateData(newTrigger)
     }
 
     render() {
         return(
             <div>
-                <button onClick={() => this.decreaseTrigger()}>Previous Character</button>
-                <button onClick={() => this.increaseTrigger()}>Next Character</button>
+                <button onClick={() => this.previousCharacter()}>Previous Character</button>
+                <button onClick={() => this.nextCharacter()}>Next Character</button>
                 <h1>Name:</h1>
-                <h2>{this.state.characters.name}</h2>
-                <p>Gender: {this.state.characters.gender}</p>
-                <p>Height: {this.state.characters.height}</p>
-                <p>Weight: {this.state.characters.mass}</p>
-                <p>Birthday: {this.state.characters.birth_year}</p>
+                <h2>{this.state.character.name}</h2>
+                <p>Gender: {this.state.character.gender}</p>
+                <p>Height: {this.state.character.height}</p>
+                <p>Weight: {this.state.character.mass}</p>
+                <p>Birthday: {this.state.character.birth_year}</p>
             </div>
             
         )
