@@ -29,11 +29,14 @@ class Character extends Component {
 
     async setFilms(character) {
         const filmlinks = character.films
-        let films
-        for (let i=0; i < filmlinks.length; i++){
-            let film = await this.getFilm(i);
-            films.push(film);
-        }
+        let films = [];
+        for (let item of filmlinks ) {
+            await this.getFilm(item)
+            .then((result) => {
+                films.push(result)
+            })
+        };
+        debugger;
         return films;
     }
 
@@ -42,6 +45,7 @@ class Character extends Component {
         const newCharacter = await this.getCharacter(newTrigger);
         const newHomeWorld = await this.getHomeworld(newCharacter.homeworld);
         const films = await this.setFilms(newCharacter);
+        debugger;
         this.setState({character: newCharacter});
         this.setState({homeworld: newHomeWorld});
         this.setState({trigger: newTrigger});
@@ -74,6 +78,7 @@ class Character extends Component {
                 <p>Weight: {this.state.character.mass}</p>
                 <p>Birthday: {this.state.character.birth_year}</p>
                 <p>Homeworld : {this.state.homeworld.name} </p>
+                <p>{this.state.films[0]}</p>
             </div>
             
         )
