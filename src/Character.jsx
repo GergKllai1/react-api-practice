@@ -7,7 +7,8 @@ class Character extends Component {
         this.state = {
             trigger: '',
             character : [],
-            homeworld : []
+            homeworld : [],
+            films: []
         }
     }
 
@@ -21,13 +22,30 @@ class Character extends Component {
         return response.data;
     }
 
+    async getFilm(film) {
+        const response = await axios.get(film);
+        return response.data
+    }
+
+    async setFilms(character) {
+        const filmlinks = character.films
+        let films
+        for (let i=0; i < filmlinks.length; i++){
+            let film = await this.getFilm(i);
+            films.push(film);
+        }
+        return films;
+    }
+
 
     async getAndUpdateData(newTrigger) {
         const newCharacter = await this.getCharacter(newTrigger);
         const newHomeWorld = await this.getHomeworld(newCharacter.homeworld);
+        const films = await this.setFilms(newCharacter);
         this.setState({character: newCharacter});
         this.setState({homeworld: newHomeWorld});
         this.setState({trigger: newTrigger});
+        this.setState({films: films})
     }
 
     async componentDidMount() {
