@@ -11,38 +11,41 @@ class Character extends Component {
         }
     }
 
-    componentDidMount() {
-        axios.get('https://swapi.co/api/people/' + this.state.trigger)
+    getCharacter(char) {
+        axios.get('https://swapi.co/api/people/' + char)
         .then(response => {
             this.setState({
                 characters: response.data
             })
         })
+    }
+    componentDidMount() {
+        this.getCharacter(1)
     }
 
     increaseTrigger() {
         this.new = this.state.trigger + 1
         this.setState({trigger: this.new})
-        axios.get('https://swapi.co/api/people/' + this.new)
-        .then(response => {
-            this.setState({
-                characters: response.data
-            })
-        })
+        this.getCharacter(this.new)
     }
 
     decreaseTrigger() {
-        if(this.trigger > 1){
-            this.setState({trigger: this.state.trigger + 1}) 
-        }
+        this.new = this.state.trigger -1
+        this.setState({trigger: this.new}) 
+        this.getCharacter(this.new)
     }
 
     render() {
         return(
             <div>
                 <button onClick={() => this.decreaseTrigger()}>Previous Character</button>
-                <p>{this.state.characters.name}</p>
                 <button onClick={() => this.increaseTrigger()}>Next Character</button>
+                <h1>Name:</h1>
+                <h2>{this.state.characters.name}</h2>
+                <p>Gender: {this.state.characters.gender}</p>
+                <p>Height: {this.state.characters.height}</p>
+                <p>Weight: {this.state.characters.mass}</p>
+                <p>Birthday: {this.state.characters.birth_year}</p>
             </div>
             
         )
