@@ -5,17 +5,10 @@ class Character extends Component {
     constructor() {
         super();
         this.state = {
-            trigger: 1,
-            character : []
+            trigger: '',
+            character : [],
+            homeworld : []
         }
-    }
-
-    updateCharacter(character) {
-        this.setState({character: character})
-    }
-
-    updateTrigger(trigger) {
-        this.setState({trigger: trigger})
     }
 
     async getCharacter(char) {
@@ -23,25 +16,32 @@ class Character extends Component {
         return response.data;
     }
 
-    async componentDidMount() {
-        const character = await this.getCharacter(1)
-        this.updateCharacter(character)
+    async getHomeworld(homeworld) {
+        const response = await axios.get(homeworld);
+        return response.data;
     }
 
+
     async getAndUpdateData(newTrigger) {
-        const newCharacter = await this.getCharacter(newTrigger)
-        this.updateCharacter(newCharacter)
-        this.updateTrigger(newTrigger)
+        const newCharacter = await this.getCharacter(newTrigger);
+        const newHomeWorld = await this.getHomeworld(newCharacter.homeworld);
+        this.setState({character: newCharacter});
+        this.setState({homeworld: newHomeWorld});
+        this.setState({trigger: newTrigger});
+    }
+
+    async componentDidMount() {
+        this.getAndUpdateData(1)
     }
 
     nextCharacter() {
-        const newTrigger = this.state.trigger + 1
-        this.getAndUpdateData(newTrigger)
+        const newTrigger = this.state.trigger + 1;
+        this.getAndUpdateData(newTrigger);
     }
 
     previousCharacter() {
-        const newTrigger = this.state.trigger - 1
-        this.getAndUpdateData(newTrigger)
+        const newTrigger = this.state.trigger - 1;
+        this.getAndUpdateData(newTrigger);
     }
 
     render() {
@@ -55,6 +55,7 @@ class Character extends Component {
                 <p>Height: {this.state.character.height}</p>
                 <p>Weight: {this.state.character.mass}</p>
                 <p>Birthday: {this.state.character.birth_year}</p>
+                <p>Homeworld : {this.state.homeworld.name} </p>
             </div>
             
         )
