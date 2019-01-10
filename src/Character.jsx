@@ -7,7 +7,8 @@ class Character extends Component {
         this.state = {
             trigger: '',
             character : [],
-            homeworld : []
+            homeworld : [],
+            films: []
         }
     }
 
@@ -21,13 +22,32 @@ class Character extends Component {
         return response.data;
     }
 
+    async getFilm(film) {
+        const response = await axios.get(film);
+        return response.data
+    }
+
+    async setFilms(character) {
+        const filmlinks = character.films
+        let films = [];
+        for (let item of filmlinks ) {
+            await this.getFilm(item)
+            .then((result) => {
+                films.push(result)
+            })
+        };
+        return films;
+    }
+
 
     async getAndUpdateData(newTrigger) {
         const newCharacter = await this.getCharacter(newTrigger);
         const newHomeWorld = await this.getHomeworld(newCharacter.homeworld);
+        const films = await this.setFilms(newCharacter);
         this.setState({character: newCharacter});
         this.setState({homeworld: newHomeWorld});
         this.setState({trigger: newTrigger});
+        this.setState({films: films});
     }
 
     async componentDidMount() {
@@ -45,6 +65,17 @@ class Character extends Component {
     }
 
     render() {
+        const films = this.state.films
+        let filmList
+        if(films.length > 0) {
+            filmList = films.map(film => {
+                return (
+                    <div key={film.episode_id}>
+                        {film.title}
+                    </div>
+                )
+            })
+        }
         return(
             <div>
                 <button onClick={() => this.previousCharacter()}>Previous Character</button>
@@ -56,6 +87,10 @@ class Character extends Component {
                 <p>Weight: {this.state.character.mass}</p>
                 <p>Birthday: {this.state.character.birth_year}</p>
                 <p>Homeworld : {this.state.homeworld.name} </p>
+                <h3>Film appearances:</h3>
+                <div>
+                    {filmList}
+                </div>
             </div>
             
         )
