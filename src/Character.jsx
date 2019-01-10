@@ -17,21 +17,16 @@ class Character extends Component {
         return response.data;
     }
 
-    async getHomeworld(homeworld) {
-        const response = await axios.get(homeworld);
+    async getData(data) {
+        const response = await axios.get(data);
         return response.data;
-    }
-
-    async getFilm(film) {
-        const response = await axios.get(film);
-        return response.data
     }
 
     async setFilms(character) {
         const filmlinks = character.films
         let films = [];
         for (let item of filmlinks ) {
-            await this.getFilm(item)
+            await this.getData(item)
             .then((result) => {
                 films.push(result)
             })
@@ -42,7 +37,7 @@ class Character extends Component {
 
     async getAndUpdateData(newTrigger) {
         const newCharacter = await this.getCharacter(newTrigger);
-        const newHomeWorld = await this.getHomeworld(newCharacter.homeworld);
+        const newHomeWorld = await this.getData(newCharacter.homeworld);
         const films = await this.setFilms(newCharacter);
         this.setState({character: newCharacter});
         this.setState({homeworld: newHomeWorld});
