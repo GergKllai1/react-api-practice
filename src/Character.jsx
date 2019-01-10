@@ -36,7 +36,6 @@ class Character extends Component {
                 films.push(result)
             })
         };
-        debugger;
         return films;
     }
 
@@ -45,11 +44,10 @@ class Character extends Component {
         const newCharacter = await this.getCharacter(newTrigger);
         const newHomeWorld = await this.getHomeworld(newCharacter.homeworld);
         const films = await this.setFilms(newCharacter);
-        debugger;
         this.setState({character: newCharacter});
         this.setState({homeworld: newHomeWorld});
         this.setState({trigger: newTrigger});
-        this.setState({films: films})
+        this.setState({films: films});
     }
 
     async componentDidMount() {
@@ -67,6 +65,17 @@ class Character extends Component {
     }
 
     render() {
+        const films = this.state.films
+        let filmList
+        if(films.length > 0) {
+            filmList = films.map(film => {
+                return (
+                    <div key={film.episode_id}>
+                        {film.title}
+                    </div>
+                )
+            })
+        }
         return(
             <div>
                 <button onClick={() => this.previousCharacter()}>Previous Character</button>
@@ -78,7 +87,10 @@ class Character extends Component {
                 <p>Weight: {this.state.character.mass}</p>
                 <p>Birthday: {this.state.character.birth_year}</p>
                 <p>Homeworld : {this.state.homeworld.name} </p>
-                <p>{this.state.films[0]}</p>
+                <h3>Film appearances:</h3>
+                <div>
+                    {filmList}
+                </div>
             </div>
             
         )
