@@ -71,15 +71,19 @@ class Character extends Component {
       <div>
         {this.state.loading ? <Loading /> :
           <div>
+            <div className='m-5 d-flex justify-content-center'>
+              <div className='p-5 card w-50 bg-info text-white'>
+                <CharacterCard
+                  character={this.state.character}
+                  homeworld={this.state.homeworld}
+                />
+                <FilmList films={this.state.films} />
+              </div>
+            </div>
             <Navigation
               next={() => this.nextCharacter(this.state.trigger)}
               previous={() => this.previousCharacter(this.state.trigger)}
             />
-            <CharacterCard
-              character={this.state.character}
-              homeworld={this.state.homeworld}
-            />
-            <FilmList films={this.state.films} />
           </div>
         }
       </div>
