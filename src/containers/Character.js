@@ -71,8 +71,9 @@ class Character extends Component {
       <div>
         {this.state.loading ? <Loading /> :
           <div>
-            <div className='m-5 d-flex justify-content-center'>
-              <div className='p-5 card w-50 bg-info text-white'>
+            <div className='m-2 d-flex justify-content-center'>
+              <div className='pb-5 card w-50 bg-info text-white'>
+                <h1>Star Wars Characters</h1>
                 <CharacterCard
                   character={this.state.character}
                   homeworld={this.state.homeworld}
