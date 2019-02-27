@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import FilmList from './components/Films/FilmList';
 
 class Character extends Component {
-    constructor() {
-        super();
-        this.state = {
+    state = {
             trigger: '',
             character : [],
             homeworld : [],
             films: []
         }
-    }
 
     async getCharacter(char) {
         const response = await axios.get('https://swapi.co/api/people/' + char);
@@ -60,17 +58,6 @@ class Character extends Component {
     }
 
     render() {
-        const films = this.state.films
-        let filmList
-        if(films.length > 0) {
-            filmList = films.map(film => {
-                return (
-                    <div key={film.episode_id}>
-                        {film.title}
-                    </div>
-                )
-            })
-        }
         return(
             <div>
                 <button onClick={() => this.previousCharacter()}>Previous Character</button>
@@ -84,7 +71,7 @@ class Character extends Component {
                 <p>Homeworld : {this.state.homeworld.name} </p>
                 <h3>Film appearances:</h3>
                 <div>
-                    {filmList}
+                    <FilmList films={this.state.films}/>
                 </div>
             </div>
             
