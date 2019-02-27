@@ -1,15 +1,22 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import FilmList from './components/Films/FilmList';
-import Navigation from './components/Navigation/Navigation';
-import CharacterCard from './components/Character/CharacterCard';
+import FilmList from '../components/Films/FilmList';
+import Navigation from '../components/Navigation/Navigation';
+import CharacterCard from '../components/Character/CharacterCard';
+import Loading from '../components/Loading/Loading';
 
 class Character extends Component {
   state = {
     trigger: '',
     character: [],
     homeworld: [],
-    films: []
+    films: [],
+    loading: false
+  }
+
+  async componentDidMount() {
+    this.setState({ loading: true })
+    this.getAndUpdateData(1)
   }
 
   async getCharacter(char) {
@@ -38,42 +45,44 @@ class Character extends Component {
     const newCharacter = await this.getCharacter(newTrigger);
     const newHomeWorld = await this.getData(newCharacter.homeworld);
     const films = await this.setFilms(newCharacter);
-    this.setState({ character: newCharacter });
-    this.setState({ homeworld: newHomeWorld });
-    this.setState({ trigger: newTrigger });
-    this.setState({ films: films });
-  }
-
-  async componentDidMount() {
-    this.getAndUpdateData(1)
+    this.setState({
+      character: newCharacter,
+      homeworld: newHomeWorld,
+      trigger: newTrigger,
+      films: films,
+      loading: false
+    })
   }
 
   nextCharacter() {
     const newTrigger = this.state.trigger + 1;
+    this.setState({ loading: true })
     this.getAndUpdateData(newTrigger);
   }
 
   previousCharacter() {
     const newTrigger = this.state.trigger - 1;
+    this.setState({ loading: true })
     this.getAndUpdateData(newTrigger);
   }
 
   render() {
     return (
       <div>
-        <Navigation
-          next={() => this.nextCharacter(this.state.trigger)}
-          previous={() => this.previousCharacter(this.state.trigger)}
-        />
-        <CharacterCard 
-          character={this.state.character}
-          homeworld={this.state.homeworld}
-        />
-        <div>
-          <FilmList films={this.state.films} />
-        </div>
+        {this.state.loading ? <Loading /> :
+          <div>
+            <Navigation
+              next={() => this.nextCharacter(this.state.trigger)}
+              previous={() => this.previousCharacter(this.state.trigger)}
+            />
+            <CharacterCard
+              character={this.state.character}
+              homeworld={this.state.homeworld}
+            />
+            <FilmList films={this.state.films} />
+          </div>
+        }
       </div>
-
     )
   }
 }
