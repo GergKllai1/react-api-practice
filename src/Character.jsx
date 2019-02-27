@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios';
 import FilmList from './components/Films/FilmList';
 import Navigation from './components/Navigation/Navigation';
+import CharacterCard from './components/Character/CharacterCard';
 
 class Character extends Component {
   state = {
@@ -64,13 +65,10 @@ class Character extends Component {
           next={() => this.nextCharacter(this.state.trigger)}
           previous={() => this.previousCharacter(this.state.trigger)}
         />
-        <h1>Name:</h1>
-        <h2>{this.state.character.name}</h2>
-        <p>Gender: {this.state.character.gender}</p>
-        <p>Height: {this.state.character.height}</p>
-        <p>Weight: {this.state.character.mass}</p>
-        <p>Birthday: {this.state.character.birth_year}</p>
-        <p>Homeworld : {this.state.homeworld.name} </p>
+        <CharacterCard 
+          character={this.state.character}
+          homeworld={this.state.homeworld}
+        />
         <div>
           <FilmList films={this.state.films} />
         </div>
